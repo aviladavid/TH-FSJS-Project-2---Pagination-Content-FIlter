@@ -1,5 +1,6 @@
-let studentListArray = document.querySelectorAll('.student-list li');
-let studentListContainer = document.querySelector('ul .student-list');
+let studentListNodeList = document.querySelectorAll('.student-list li');
+let studentListArray = Array.from(studentListNodeList);
+let studentListContainer = document.querySelector('.student-list');
 
 /* determineStudentListSection will slice the array into 10 student sections depending on the selected page number. i.e. for page 2 items(students) for index positions 10 to 19 will be returned. */
 const determineStudentListSection = (pageNumber, studentList) => {
@@ -8,18 +9,19 @@ const determineStudentListSection = (pageNumber, studentList) => {
     let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
     return studentListSection;
 }
+
 /*
-    secondSliceNumber
-    pg.1 => 1 + (1*9) = 10
-    pg.2 => 2 + (2*9) = 20
-    pg.3 => 3 + (3*9) = 30
-    pg.n => n + (n*9) = x
-    firstSliceNumber
-    pg.1 => secondSliceNumber - 10 = 0
-    pg.2 => secondSliceNumber - 10 = 10
-    pg.3 => secondSliceNumber - 10 = 20
-    pg.n => secondSliceNumber - 10 = y
-    */
+secondSliceNumber
+pg.1 => 1 + (1*9) = 10
+pg.2 => 2 + (2*9) = 20
+pg.3 => 3 + (3*9) = 30
+pg.n => n + (n*9) = x
+firstSliceNumber
+pg.1 => secondSliceNumber - 10 = 0
+pg.2 => secondSliceNumber - 10 = 10
+pg.3 => secondSliceNumber - 10 = 20
+pg.n => secondSliceNumber - 10 = y
+*/
 
 /* showPage --> clears the page, builds a list of 10 students and displays it on the page.
 depend on the page number passed to this function. */
@@ -28,7 +30,6 @@ const showPage = (pageNumber, studentList) => {
         studentList[i].style.display = 'none';
     }
     let listSection = determineStudentListSection(pageNumber, studentList);
-    console.log(listSection);
     for (let i = 0; i < listSection.length; i++) {
         // studentListContainer.appendChild(studentListSection[i]);
         listSection[i].style.display = 'list-item';
@@ -38,10 +39,7 @@ const showPage = (pageNumber, studentList) => {
     // Then loop through all students in our student list argument
     // Show student
 } // showPage
-showPage(1, studentListArray);
-console.log(studentListArray);
-
-
+// showPage(1, studentListArray);
 
 /* appendPageLinks --> creates all the page links based on a list of students. It will determine
 how many pages we need based on the list's length, create a list of links for each page and, and 
