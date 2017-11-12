@@ -4,76 +4,83 @@
 
                         ***** AIMING FOR EXCEEDS EXPECTATIONS *****
 
-WHAT THE CODE DOES:
+WHAT IT DOES:
 
     This JavaScript code is intended to handle pagination dynamically given an HTML list (in this 
     case a list of student profiles) of any size. The objective is that for any list exceeding 10 student profiles a pagination system kicks in to only show 10 profiles per page and provide the user with pagination buttons and a search field feature.
 
-HOW IT DOES IT:
+HOW IT WORKS:
 
     The code will transform the list into an array, hide all the profiles (list items), slice the 
     array into a smaller array (of maximum 10 items) that will contain only the profiles 
-    corresponding to the given page number and display only these profiles.
+    corresponding to the given page number and display them.
 
     So for instance, page 1 will contain items in index positions 0 - 9 from the unsliced array,
     page 2 will contain items 10 - 19, so on and so forth. 
 */
 
-
+/* VARIABLES */
 let studentListContainer = document.querySelector('div.page');
 let studentListNodeList = document.querySelectorAll('.student-list li'); // returns a NodeList!!
 let studentListArray = Array.from(studentListNodeList);
-let paginationLinks = document.querySelectorAll('.pagination li');
+let numberOfPages = Math.ceil(studentListArray.length / 10);
+
+/* FUNCTIONS */
 
 /* showPage --> clears the page, builds a list of 10 students and displays it on the page.
 depend on the page number passed to this function. */
 const showPage = (pageNumber, studentList) => {
-
+    console.log('showPage has been called');
     for (let i = 0; i < studentList.length; i++) {
         studentList[i].style.display = 'none';
+        console.log('original list items have been hidden')
     }
-    /* determineStudentListSection will slice the array into a smaller 10 student sub-array
-     depending on the selected page number. */
+
+    /* determineStudentListSection will slice the array into a smaller 10 item sub-array
+     with its contents dependent on the selected page number. */
     const determineStudentListSection = (pageNumber, studentList) => {
         let secondSliceNumber = pageNumber + (9 * pageNumber);
         let firstSliceNumber = secondSliceNumber - 10;
         let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
+        console.log('array has been sliced for page' + pageNumber);
         return studentListSection;
     }
-
     let listSection = determineStudentListSection(pageNumber, studentList);
     for (let i = 0; i < listSection.length; i++) {
         listSection[i].style.display = 'list-item';
     }
-    // if student should be on this page number (i.e. p.1)
-    // appendPageLinks(studedntList);
-    // Then loop through all students in our student list argument
-    // Show student
-} // showPage
-showPage(6, studentListArray);
+    console.log('new sub-array has been made visible');
+    appendPageLinks(studentList);
+} 
+
 
 /* appendPageLinks --> creates all the page links based on a list of students. It will determine
 how many pages we need based on the list's length, create a list of links for each page and, and 
 append that list to the page */
 const appendPageLinks = (studentList) => {
-    // Determine how many pages for the given student list
-    let numberOfPages = Math.ceil(studentList.length / 10);
-    if (numberOfPages > 1) {
-        // Create a page link section
-        let newPaginationDiv = document.createElement('div');
-        newPaginationDiv.className = 'pagination';
-        studentListContainer.appendChild(newPaginationDiv);
+    console.log('appendPageLinks has been called');
+    // Create a page link section
+    let newPaginationDiv = document.createElement('div');
+    console.log('new pagination div has been created')
+    newPaginationDiv.className = 'pagination';
+    let newPaginationUL = document.createElement('ul');
+    newPaginationUL.className = 'pagination-ul';
+    studentListContainer.appendChild(newPaginationDiv);
+    newPaginationDiv.appendChild(newPaginationUL);
 
-        let paginationNav = document.querySelector('div.pagination');
-        for (let i = 0; i < numberOfPages; i++) {
-            let li = document.createElement('li');
-            paginationNav.appendChild(li);
-            let paginationLi = document.querySelector('.pagination li');
-            let a = document.createElement('a');
-            paginationLi.appendChild(a);
-            a.textContent = i + 1;
-        }
+    
+    let paginationUL = document.querySelector('.pagination-ul');
+    for (let i = 0; i < numberOfPages; i++) {
+        let li = document.createElement('li');
+        li.className = 'pagination-li';
+        paginationUL.appendChild(li);
+        let paginationLiNode = document.querySelectorAll('.pagination li');
+        let paginationLiArray = Array.from(paginationLiNode);
+        let a = document.createElement('a');
+        paginationLiArray[i].appendChild(a);
+        a.textContent = i + 1;
     }
+
     // "for" every page
     // Add a page link to the page link section
     // Remove the old page link section from the site
@@ -82,17 +89,6 @@ const appendPageLinks = (studentList) => {
     // Use the showPage function to display the page for the link clicked
     // mark that link as active
 }
-appendPageLinks(studentListArray);
-
-paginationLinks.addEventListener('click', () => {
-    let clickedlink = querySelector('.pagination li a');
-    let pageNumber = clickedLink.textContent;
-    showPage(pageNumber, studentListArray);
-});
-
-
-
-
 
 /* searchList --> takes a value from the input field, and compares it to each student in the list
 If that value is found inside the name or email of a student, that student is added to a new 
@@ -113,3 +109,26 @@ const searchList = () => {
     // ...call appendPageLinks with the matched students
     // Call showPage to show the first 10 students of matched list
 }
+
+/* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 11) 
+then no pagination is applied */
+const kickstartPagination = (pagesNeeded) => {
+    if (pagesNeeded > 1) {
+        showPage(1, studentListArray); // This won't run for < 11 items and therefore it shouldn't interfere when showing other page numbers containing 10 or fewer items. 
+        console.log('Pagination has been kickstarted');
+    }
+}
+kickstartPagination(numberOfPages);
+
+
+/* EVENT HANDLERS */
+let paginationListItems = document.querySelectorAll('.pagination li a');
+
+paginationListItems.addEventListener('click', (event) => {
+    for (let i = 0; i < 10; i ++){
+        paginationListItems[i].className = '';
+    }
+    event.target.className = 'selected';
+    let page = event.target.textContent;
+    showPage(page, studentListArray);
+});
