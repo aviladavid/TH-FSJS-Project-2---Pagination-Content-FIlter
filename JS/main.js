@@ -34,6 +34,10 @@ const determineStudentListSection = (pageNumber, studentList) => {
     let secondSliceNumber = pageNumber + (9 * pageNumber);
     let firstSliceNumber = secondSliceNumber - 10;
     let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
+    for (let i = 0; i < studentListSection.length; i++) {
+        studentListSection[i].style.display = 'list-item';
+    }
+
     return studentListSection;
 }
 
@@ -43,7 +47,8 @@ const hideList = (studentList) => {
         studentList[i].style.display = 'none';
     }
 }
-/* showPage --> builds a list of 10 students and displays it on the page depend on the page number passed to this function. Assigns the active class to the clicked item */
+/* showPage --> builds a list of 10 students and displays it on the page depend on the page number 
+passed to this function. */
 const showPage = (pageNumber, studentList) => {
     let listSection = determineStudentListSection(pageNumber, studentList);
     for (let i = 0; i < listSection.length; i++) {
@@ -138,10 +143,14 @@ console.log(paginationLinkItems);
 
 for (let i = 0; i < paginationLinkItems.length; i++) {
     paginationLinkItems[i].addEventListener('click', (event) => {
-        // store the value for then new page number    
         let newPageNumber = parseInt(event.target.textContent, 10);
         // rebuild page 
         hideList(studentListArray);
-        showPage(newPageNumber, studentListArray);
+        determineStudentListSection(newPageNumber, studentListArray);
+        let activeLink = document.getElementsByTagName('a');
+        for (let i = 0; i < activeLink.length; i++) {
+            activeLink[i].className = '';
+        }
+        activeLink[newPageNumber - 1].className = 'active';
     });
 }
