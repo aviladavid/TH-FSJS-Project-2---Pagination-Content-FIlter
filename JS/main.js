@@ -53,7 +53,7 @@ const showPage = (pageNumber, studentList) => {
     }
     console.log('new sub-array has been made visible');
     console.log('Function call --> appendPageLinks');
-    appendPageLinks(studentList);
+    appendPageLinks(pageNumber, studentList);
     
 }
 
@@ -86,7 +86,10 @@ const appendPageLinks = (pageNumber, studentList) => {
         paginationLiArray[i].appendChild(a);
         a.textContent = i + 1;
     }
-    // let clickedPageLink =  
+    //assign active class
+    let activeLink = document.getElementsByTagName[pageNumber];
+
+    activeLink.className = 'active';
     console.log('elements created and appended')
 
     // Remove the old page link section from the site
@@ -138,7 +141,7 @@ kickstartPagination(numberOfPages);
 const paginationLinkItems = document.getElementsByTagName('a');
 console.log(paginationLinkItems);
 
-/* THIRD TRY */
+/* FOURTH TRY */
 for (let i = 0; i < paginationLinkItems.length; i ++) {
     paginationLinkItems[i].addEventListener('click', (event) => {
     // store the value for then new page number    
@@ -146,20 +149,33 @@ for (let i = 0; i < paginationLinkItems.length; i ++) {
     //remove old link section
     let oldPaginationDiv = document.getElementsByClassName('pagination')[0];
     oldPaginationDiv.remove();
-    // recreate link section
-    appendPageLinks(newPageNumber, studentListArray);
-    //clear and reassign class names
-    let activeLink = paginationLinkItems[i];
-    activeLink.className = 'active';
-    // for (let i = 0; i < paginationLinkItems.length; i ++) {
-    //     paginationLinkItems[i].className = '';
-    // }
-    //     event.target.className = 'active';
-    //     console.log(event.target);
-    // call showPage for the new page number
+    // rebuild page 
     showPage(newPageNumber, studentListArray);
     });
 }
+
+// /* THIRD TRY */
+// for (let i = 0; i < paginationLinkItems.length; i ++) {
+//     paginationLinkItems[i].addEventListener('click', (event) => {
+//     // store the value for then new page number    
+//     let newPageNumber = event.target.textContent;
+//     //remove old link section
+//     let oldPaginationDiv = document.getElementsByClassName('pagination')[0];
+//     oldPaginationDiv.remove();
+//     // recreate link section
+//     appendPageLinks(newPageNumber, studentListArray);
+//     //clear and reassign class names
+//     let activeLink = paginationLinkItems[i];
+//     activeLink.className = 'active';
+//     // for (let i = 0; i < paginationLinkItems.length; i ++) {
+//     //     paginationLinkItems[i].className = '';
+//     // }
+//     //     event.target.className = 'active';
+//     //     console.log(event.target);
+//     // call showPage for the new page number
+//     showPage(newPageNumber, studentListArray);
+//     });
+// }
 
 /* SECOND TRY */
 // for (let i = 0; i < paginationLinkItems.length; i ++) {
