@@ -29,13 +29,12 @@ let numberOfPages = Math.ceil(studentListArray.length / 10);
 
 /* FUNCTIONS */
 
-/* showPage --> clears the page, builds a list of 10 students and displays it on the page.
-depend on the page number passed to this function. */
+/* showPage --> hides all elements on the page, builds a list of 10 students and displays it on the page depend on the page number passed to this function. */
 const showPage = (pageNumber, studentList) => {
     console.log('showPage running');
     for (let i = 0; i < studentList.length; i++) {
         studentList[i].style.display = 'none';
-        console.log('original list items have been hidden')
+        console.log('original list items have been hidden');
     }
 
     /* determineStudentListSection will slice the array into a smaller 10 item sub-array
@@ -62,7 +61,7 @@ const showPage = (pageNumber, studentList) => {
 /* appendPageLinks --> creates all the page links based on a list of students. It will determine
 how many pages we need based on the list's length, create a list of links for each page and, and 
 append that list to the page */
-const appendPageLinks = (studentList) => {
+const appendPageLinks = (pageNumber, studentList) => {
     console.log('appendPageLinks running');
     //crate <div class='pagination'>
     let newPaginationDiv = document.createElement('div');
@@ -76,15 +75,18 @@ const appendPageLinks = (studentList) => {
     // select ul and append li and and a elements    
     let paginationUL = document.querySelector('.pagination-ul');
     for (let i = 0; i < numberOfPages; i++) {
+        //adding li elements
         let li = document.createElement('li');
         li.className = 'pagination-li';
         paginationUL.appendChild(li);
+        //adding a to the li's
         let paginationLiNode = document.querySelectorAll('.pagination li');
         let paginationLiArray = Array.from(paginationLiNode);
         let a = document.createElement('a');
         paginationLiArray[i].appendChild(a);
         a.textContent = i + 1;
     }
+    // let clickedPageLink =  
     console.log('elements created and appended')
 
     // Remove the old page link section from the site
@@ -132,15 +134,58 @@ kickstartPagination(numberOfPages);
 
 
 /* EVENT HANDLERS */
-/*const paginationListItems = document.getElementsByClassName('.pagination-li');
-console.log(paginationListItems);
 
-paginationListItems.addEventListener('click', (event) => {
-    paginationListItems.textContent = paginationListItems.textContent.toUppercase();
-    for (let i = 0; i < 10; i ++){
-        paginationListItems[i].className = '';
-    }
-    event.target.className = 'selected';
-    let page = event.target.textContent;
-    showPage(page, studentListArray);
-});*/
+const paginationLinkItems = document.getElementsByTagName('a');
+console.log(paginationLinkItems);
+
+/* THIRD TRY */
+for (let i = 0; i < paginationLinkItems.length; i ++) {
+    paginationLinkItems[i].addEventListener('click', (event) => {
+    // store the value for then new page number    
+    let newPageNumber = event.target.textContent;
+    //remove old link section
+    let oldPaginationDiv = document.getElementsByClassName('pagination')[0];
+    oldPaginationDiv.remove();
+    // recreate link section
+    appendPageLinks(newPageNumber, studentListArray);
+    //clear and reassign class names
+    let activeLink = paginationLinkItems[i];
+    activeLink.className = 'active';
+    // for (let i = 0; i < paginationLinkItems.length; i ++) {
+    //     paginationLinkItems[i].className = '';
+    // }
+    //     event.target.className = 'active';
+    //     console.log(event.target);
+    // call showPage for the new page number
+    showPage(newPageNumber, studentListArray);
+    });
+}
+
+/* SECOND TRY */
+// for (let i = 0; i < paginationLinkItems.length; i ++) {
+//     paginationLinkItems[i].addEventListener('click', (event) => {
+//     //remove old link section
+//     let oldPaginationDiv = document.querySelector('.page:last-child');
+//     studentListContainer.removeChild(oldPaginationDiv);
+//     //clear and reassign class names
+//     for (let i = 0; i < paginationLinkItems.length; i ++) {
+//         paginationLinkItems[i].className = '';
+//     }
+//         event.target.className = 'active';
+//         console.log(event.target);
+//     // call showPage for the new page number
+//     let page = event.target.textContent;
+//     showPage(page, studentListArray);
+//     });
+// }
+
+/* FIRST TRY */
+// paginationLinkItems.addEventListener('click', (event) => {
+//     paginationListItems.textContent = paginationListItems.textContent.toUppercase();
+//     for (let i = 0; i < paginationListItems.length; i ++){
+//         paginationListItems[i].className = '';
+//     }
+//     event.target.className = 'selected';
+//     let page = event.target.textContent;
+//     showPage(page, studentListArray);
+// });
