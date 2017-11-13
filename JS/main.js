@@ -28,6 +28,15 @@ const studentListArray = Array.from(studentListNodeList);
 let numberOfPages = Math.ceil(studentListArray.length / 10);
 
 /* FUNCTIONS */
+/* determineStudentListSection will slice the array into a smaller 10 item sub-array
+     with its contents dependent on the selected page number. */
+const determineStudentListSection = (pageNumber, studentList) => {
+    let secondSliceNumber = pageNumber + (9 * pageNumber);
+    let firstSliceNumber = secondSliceNumber - 10;
+    let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
+    console.log('array has been sliced for page ' + pageNumber);
+    return studentListSection;
+}
 
 /* showPage --> hides all elements on the page, builds a list of 10 students and displays it on the page depend on the page number passed to this function. */
 const showPage = (pageNumber, studentList) => {
@@ -36,21 +45,13 @@ const showPage = (pageNumber, studentList) => {
         studentList[i].style.display = 'none';
         console.log('original list items have been hidden');
     }
-
-    /* determineStudentListSection will slice the array into a smaller 10 item sub-array
-     with its contents dependent on the selected page number. */
-    const determineStudentListSection = (pageNumber, studentList) => {
-        let secondSliceNumber = pageNumber + (9 * pageNumber);
-        let firstSliceNumber = secondSliceNumber - 10;
-        let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
-        console.log('array has been sliced for page ' + pageNumber);
-        return studentListSection;
-    }
+    
     console.log('Function Call --> determineStudentListSection');
     let listSection = determineStudentListSection(pageNumber, studentList);
     for (let i = 0; i < listSection.length; i++) {
         listSection[i].style.display = 'list-item';
     }
+
     console.log('new sub-array has been made visible');
     console.log('Function call --> appendPageLinks');
     appendPageLinks(pageNumber, studentList);
@@ -63,22 +64,16 @@ how many pages we need based on the list's length, create a list of links for ea
 append that list to the page */
 const appendPageLinks = (pageNumber, studentList) => {
     console.log('appendPageLinks running');
-    //crate <div class='pagination'>
-    let newPaginationDiv = document.createElement('div');
-    newPaginationDiv.className = 'pagination';
-    // create pagination <ul class='pagination-ul'>
-    let newPaginationUL = document.createElement('ul');
-    newPaginationUL.className = 'pagination-ul';
-    // append both elements
-    studentListContainer.appendChild(newPaginationDiv);
-    newPaginationDiv.appendChild(newPaginationUL);
+    
     // select ul and append li and and a elements    
     let paginationUL = document.querySelector('.pagination-ul');
     for (let i = 0; i < numberOfPages; i++) {
+        
         //adding li elements
         let li = document.createElement('li');
         li.className = 'pagination-li';
         paginationUL.appendChild(li);
+        
         //adding a to the li's
         let paginationLiNode = document.querySelectorAll('.pagination li');
         let paginationLiArray = Array.from(paginationLiNode);
@@ -86,11 +81,11 @@ const appendPageLinks = (pageNumber, studentList) => {
         paginationLiArray[i].appendChild(a);
         a.textContent = i + 1;
     }
+    
     //assign active class
-    let activeLink = document.getElementsByTagName[pageNumber];
-
-    activeLink.className = 'active';
-    console.log('elements created and appended')
+    // let activeLink = document.getElementsByTagName('a');
+    // activeLink.className = 'active';
+    // console.log('elements created and appended');
 
     // Remove the old page link section from the site
     // Append our new page link section to the site
@@ -124,6 +119,18 @@ then no pagination is applied */
 const kickstartPagination = (pagesNeeded) => {
     console.log('kickstartPagination running');
     if (pagesNeeded > 1) {
+        //crate <div class='pagination'>
+        let newPaginationDiv = document.createElement('div');
+        newPaginationDiv.className = 'pagination';
+    
+        // create pagination <ul class='pagination-ul'>
+        let newPaginationUL = document.createElement('ul');
+        newPaginationUL.className = 'pagination-ul';
+    
+        // append both elements
+        studentListContainer.appendChild(newPaginationDiv);
+        newPaginationDiv.appendChild(newPaginationUL);
+        
         console.log('Function Call --> showPage');
         showPage(1, studentListArray); // This won't run for < 11 items and therefore it shouldn't interfere when showing other page numbers containing 10 or fewer items. 
         
@@ -144,11 +151,14 @@ console.log(paginationLinkItems);
 /* FOURTH TRY */
 for (let i = 0; i < paginationLinkItems.length; i ++) {
     paginationLinkItems[i].addEventListener('click', (event) => {
+    
     // store the value for then new page number    
-    let newPageNumber = event.target.textContent;
+    let newPageNumber = parseInt(event.target.textContent, 10);
+    
     //remove old link section
     let oldPaginationDiv = document.getElementsByClassName('pagination')[0];
     oldPaginationDiv.remove();
+    
     // rebuild page 
     showPage(newPageNumber, studentListArray);
     });
