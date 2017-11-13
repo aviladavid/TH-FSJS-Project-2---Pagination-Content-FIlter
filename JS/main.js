@@ -34,46 +34,39 @@ const determineStudentListSection = (pageNumber, studentList) => {
     let secondSliceNumber = pageNumber + (9 * pageNumber);
     let firstSliceNumber = secondSliceNumber - 10;
     let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
-    console.log('array has been sliced for page ' + pageNumber);
     return studentListSection;
 }
 
-/* showPage --> hides all elements on the page, builds a list of 10 students and displays it on the page depend on the page number passed to this function. */
-const showPage = (pageNumber, studentList) => {
-    console.log('showPage running');
+// hides the list items 
+const hideList = (studentList) => {
     for (let i = 0; i < studentList.length; i++) {
         studentList[i].style.display = 'none';
-        console.log('original list items have been hidden');
     }
-
-    console.log('Function Call --> determineStudentListSection');
+}
+/* showPage --> builds a list of 10 students and displays it on the page depend on the page number passed to this function. Assigns the active class to the clicked item */
+const showPage = (pageNumber, studentList) => {
     let listSection = determineStudentListSection(pageNumber, studentList);
     for (let i = 0; i < listSection.length; i++) {
         listSection[i].style.display = 'list-item';
     }
-    console.log('new sub-array has been made visible');
-
-    console.log('Function call --> appendPageLinks');
     appendPageLinks(pageNumber, studentList);
-    console.log('elements created and appended');
-
-    //assign active class
     let activeLink = document.getElementsByTagName('a');
     activeLink[pageNumber - 1].className = 'active';
+}
+
+const removeOldLinks = () => {
+    let paginationUL = document.querySelector('.pagination-ul');
+    while (paginationUL.firstChild) {
+        paginationUL.removeChild(paginationUL.firstChild);
+    }
 }
 
 /* appendPageLinks --> creates all the page links based on a list of students. It will determine
 how many pages we need based on the list's length, create a list of links for each page and, and 
 append that list to the page */
 const appendPageLinks = (pageNumber, studentList) => {
-    console.log('appendPageLinks running');
     let paginationUL = document.querySelector('.pagination-ul');
-
-    // remove old link section
-    while (paginationUL.firstChild) {
-        paginationUL.removeChild(paginationUL.firstChild);
-    }
-    
+    removeOldLinks();
     // create and append li and a elements    
     for (let i = 0; i < numberOfPages; i++) {
 
@@ -114,9 +107,10 @@ const searchList = () => {
 /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 11) 
 then no pagination is applied */
 const kickstartPagination = (pagesNeeded) => {
-    console.log('kickstartPagination running');
     if (pagesNeeded > 1) {
         //crate <div class='pagination'>
+        hideList(studentListArray);
+
         let newPaginationDiv = document.createElement('div');
         newPaginationDiv.className = 'pagination';
 
@@ -128,14 +122,12 @@ const kickstartPagination = (pagesNeeded) => {
         studentListContainer.appendChild(newPaginationDiv);
         newPaginationDiv.appendChild(newPaginationUL);
 
-        console.log('Function Call --> showPage');
-        showPage(1, studentListArray); // This won't run for < 11 items and therefore it shouldn't interfere when showing other page numbers containing 10 or fewer items. 
-
+        // build page 1
+        showPage(1, studentListArray);
     } else {
         return;
     }
 }
-console.log('Function Call --> kickstartPagination');
 kickstartPagination(numberOfPages);
 
 /* EVENT HANDLER */
@@ -149,6 +141,7 @@ for (let i = 0; i < paginationLinkItems.length; i++) {
         // store the value for then new page number    
         let newPageNumber = parseInt(event.target.textContent, 10);
         // rebuild page 
+        hideList(studentListArray);
         showPage(newPageNumber, studentListArray);
     });
 }
