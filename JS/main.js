@@ -21,13 +21,13 @@ HOW IT WORKS:
     page 2 will contain items 10 - 19, so on and so forth. 
 */
 
-/* VARIABLES */
+
 const studentListContainer = document.querySelector('div.page');
 const studentListNodeList = document.querySelectorAll('.student-list li'); // returns a NodeList!!
 const studentListArray = Array.from(studentListNodeList);
 let numberOfPages = Math.ceil(studentListArray.length / 10);
 
-/* FUNCTIONS */
+
 /* determineStudentListSection will slice the array into a smaller 10 item sub-array
      with its contents dependent on the selected page number. */
 const determineStudentListSection = (pageNumber, studentList) => {
@@ -45,35 +45,43 @@ const showPage = (pageNumber, studentList) => {
         studentList[i].style.display = 'none';
         console.log('original list items have been hidden');
     }
-    
+
     console.log('Function Call --> determineStudentListSection');
     let listSection = determineStudentListSection(pageNumber, studentList);
     for (let i = 0; i < listSection.length; i++) {
         listSection[i].style.display = 'list-item';
     }
-
     console.log('new sub-array has been made visible');
+
     console.log('Function call --> appendPageLinks');
     appendPageLinks(pageNumber, studentList);
-    
-}
+    console.log('elements created and appended');
 
+    //assign active class
+    let activeLink = document.getElementsByTagName('a');
+    activeLink[pageNumber - 1].className = 'active';
+}
 
 /* appendPageLinks --> creates all the page links based on a list of students. It will determine
 how many pages we need based on the list's length, create a list of links for each page and, and 
 append that list to the page */
 const appendPageLinks = (pageNumber, studentList) => {
     console.log('appendPageLinks running');
-    
-    // select ul and append li and and a elements    
     let paginationUL = document.querySelector('.pagination-ul');
+
+    // remove old link section
+    while (paginationUL.firstChild) {
+        paginationUL.removeChild(paginationUL.firstChild);
+    }
+    
+    // create and append li and a elements    
     for (let i = 0; i < numberOfPages; i++) {
-        
+
         //adding li elements
         let li = document.createElement('li');
         li.className = 'pagination-li';
         paginationUL.appendChild(li);
-        
+
         //adding a to the li's
         let paginationLiNode = document.querySelectorAll('.pagination li');
         let paginationLiArray = Array.from(paginationLiNode);
@@ -81,17 +89,6 @@ const appendPageLinks = (pageNumber, studentList) => {
         paginationLiArray[i].appendChild(a);
         a.textContent = i + 1;
     }
-    
-    //assign active class
-    // let activeLink = document.getElementsByTagName('a');
-    // activeLink.className = 'active';
-    // console.log('elements created and appended');
-
-    // Remove the old page link section from the site
-    // Append our new page link section to the site
-    // Define what happens when you click a link 
-    // Use the showPage function to display the page for the link clicked
-    // mark that link as active
 }
 
 /* searchList --> takes a value from the input field, and compares it to each student in the list
@@ -122,18 +119,18 @@ const kickstartPagination = (pagesNeeded) => {
         //crate <div class='pagination'>
         let newPaginationDiv = document.createElement('div');
         newPaginationDiv.className = 'pagination';
-    
+
         // create pagination <ul class='pagination-ul'>
         let newPaginationUL = document.createElement('ul');
         newPaginationUL.className = 'pagination-ul';
-    
+
         // append both elements
         studentListContainer.appendChild(newPaginationDiv);
         newPaginationDiv.appendChild(newPaginationUL);
-        
+
         console.log('Function Call --> showPage');
         showPage(1, studentListArray); // This won't run for < 11 items and therefore it shouldn't interfere when showing other page numbers containing 10 or fewer items. 
-        
+
     } else {
         return;
     }
@@ -141,77 +138,17 @@ const kickstartPagination = (pagesNeeded) => {
 console.log('Function Call --> kickstartPagination');
 kickstartPagination(numberOfPages);
 
-
-
-/* EVENT HANDLERS */
+/* EVENT HANDLER */
 
 const paginationLinkItems = document.getElementsByTagName('a');
+console.log('paginationLinkItems');
 console.log(paginationLinkItems);
 
-/* FOURTH TRY */
-for (let i = 0; i < paginationLinkItems.length; i ++) {
+for (let i = 0; i < paginationLinkItems.length; i++) {
     paginationLinkItems[i].addEventListener('click', (event) => {
-    
-    // store the value for then new page number    
-    let newPageNumber = parseInt(event.target.textContent, 10);
-    
-    //remove old link section
-    let oldPaginationDiv = document.getElementsByClassName('pagination')[0];
-    oldPaginationDiv.remove();
-    
-    // rebuild page 
-    showPage(newPageNumber, studentListArray);
+        // store the value for then new page number    
+        let newPageNumber = parseInt(event.target.textContent, 10);
+        // rebuild page 
+        showPage(newPageNumber, studentListArray);
     });
 }
-
-// /* THIRD TRY */
-// for (let i = 0; i < paginationLinkItems.length; i ++) {
-//     paginationLinkItems[i].addEventListener('click', (event) => {
-//     // store the value for then new page number    
-//     let newPageNumber = event.target.textContent;
-//     //remove old link section
-//     let oldPaginationDiv = document.getElementsByClassName('pagination')[0];
-//     oldPaginationDiv.remove();
-//     // recreate link section
-//     appendPageLinks(newPageNumber, studentListArray);
-//     //clear and reassign class names
-//     let activeLink = paginationLinkItems[i];
-//     activeLink.className = 'active';
-//     // for (let i = 0; i < paginationLinkItems.length; i ++) {
-//     //     paginationLinkItems[i].className = '';
-//     // }
-//     //     event.target.className = 'active';
-//     //     console.log(event.target);
-//     // call showPage for the new page number
-//     showPage(newPageNumber, studentListArray);
-//     });
-// }
-
-/* SECOND TRY */
-// for (let i = 0; i < paginationLinkItems.length; i ++) {
-//     paginationLinkItems[i].addEventListener('click', (event) => {
-//     //remove old link section
-//     let oldPaginationDiv = document.querySelector('.page:last-child');
-//     studentListContainer.removeChild(oldPaginationDiv);
-//     //clear and reassign class names
-//     for (let i = 0; i < paginationLinkItems.length; i ++) {
-//         paginationLinkItems[i].className = '';
-//     }
-//         event.target.className = 'active';
-//         console.log(event.target);
-//     // call showPage for the new page number
-//     let page = event.target.textContent;
-//     showPage(page, studentListArray);
-//     });
-// }
-
-/* FIRST TRY */
-// paginationLinkItems.addEventListener('click', (event) => {
-//     paginationListItems.textContent = paginationListItems.textContent.toUppercase();
-//     for (let i = 0; i < paginationListItems.length; i ++){
-//         paginationListItems[i].className = '';
-//     }
-//     event.target.className = 'selected';
-//     let page = event.target.textContent;
-//     showPage(page, studentListArray);
-// });
