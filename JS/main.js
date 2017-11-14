@@ -22,10 +22,12 @@ HOW IT WORKS:
 */
 
 
+const pageHeader = document.querySelector('.page-header');
 const studentListContainer = document.querySelector('div.page');
 const studentListNodeList = document.querySelectorAll('.student-list li'); // returns a NodeList!!
 const studentListArray = Array.from(studentListNodeList);
 let numberOfPages = Math.ceil(studentListArray.length / 10);
+
 
 
 /* determineStudentListSection will slice the array into a smaller 10 item sub-array
@@ -95,6 +97,18 @@ If that value is found inside the name or email of a student, that student is ad
 were found. Otherwise, call the appendPageLinks function to display the first page of matched 
 results. */
 const searchList = () => {
+    let searchResults =[];
+    const studentSearchInput01 = pageHeader.getElementsByTagName('input');
+    let userSearch = studentSearchInput01.textContent;
+    searchResults.push(userSearch);
+    console.log(searchResults);
+
+    const studentSearchInput02 = pageHeader.querySelector('input');
+    // let userSearch = studentSearchInput.textContent;
+    console.log(studentSearchInput02);
+
+
+
     // Obtain the value of the search input
     // Remove the previous page link section
     // Loop over the student list, and for each student...
@@ -135,12 +149,11 @@ const kickstartPagination = (pagesNeeded) => {
 }
 kickstartPagination(numberOfPages);
 
-/* EVENT HANDLER */
+/* EVENT HANDLERS */
 
 const paginationLinkItems = document.getElementsByTagName('a');
-console.log('paginationLinkItems');
-console.log(paginationLinkItems);
 
+// pagination event handler
 for (let i = 0; i < paginationLinkItems.length; i++) {
     paginationLinkItems[i].addEventListener('click', (event) => {
         let newPageNumber = parseInt(event.target.textContent, 10);
@@ -154,3 +167,25 @@ for (let i = 0; i < paginationLinkItems.length; i++) {
         activeLink[newPageNumber - 1].className = 'active';
     });
 }
+
+// inserting search elements
+document.addEventListener('DOMContentLoaded', () => {
+    const studentSearchDiv = document.createElement('Div');
+    studentSearchDiv.className = 'student-search';
+    pageHeader.appendChild(studentSearchDiv);
+
+    const studentSearchInput = document.createElement('input');
+    studentSearchInput.placeholder = 'Search for students...';
+    studentSearchInput.type = 'text';
+    studentSearchDiv.appendChild(studentSearchInput);
+
+    const studentSearchButton = document.createElement('button');
+    studentSearchButton.textContent = 'Search';
+    studentSearchDiv.appendChild(studentSearchButton);
+});
+
+// studentSearchButton event handler
+const searchButton = document.getElementsByTagName('button')[0];
+searchButton.addEventListener('click', () => {
+    searchButton.textContent = 'Poof';
+});
