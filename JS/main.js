@@ -21,155 +21,120 @@ HOW IT WORKS:
     page 2 will contain items 10 - 19, so on and so forth. 
 */
 
-
-const pageHeader = document.querySelector('.page-header');
-const studentListContainer = document.querySelector('div.page');
-const studentListNodeList = document.querySelectorAll('.student-list li'); // returns a NodeList!!
-const studentListArray = Array.from(studentListNodeList);
-let numberOfPages = Math.ceil(studentListArray.length / 10);
-
-
-
-/* determineStudentListSection will slice the array into a smaller 10 item sub-array
-     with its contents dependent on the selected page number. */
-const determineStudentListSection = (pageNumber, studentList) => {
-    let secondSliceNumber = pageNumber + (9 * pageNumber);
-    let firstSliceNumber = secondSliceNumber - 10;
-    let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
-    for (let i = 0; i < studentListSection.length; i++) {
-        studentListSection[i].style.display = 'list-item';
-    }
-
-    return studentListSection;
-}
-
-// hides the list items 
-const hideList = (studentList) => {
-    for (let i = 0; i < studentList.length; i++) {
-        studentList[i].style.display = 'none';
-    }
-}
-/* showPage --> builds a list of 10 students and displays it on the page depend on the page number 
-passed to this function. */
-const showPage = (pageNumber, studentList) => {
-    let listSection = determineStudentListSection(pageNumber, studentList);
-    for (let i = 0; i < listSection.length; i++) {
-        listSection[i].style.display = 'list-item';
-    }
-    appendPageLinks(pageNumber, studentList);
-    let activeLink = document.getElementsByTagName('a');
-    activeLink[pageNumber - 1].className = 'active';
-}
-
-const removeOldLinks = () => {
-    let paginationUL = document.querySelector('.pagination-ul');
-    while (paginationUL.firstChild) {
-        paginationUL.removeChild(paginationUL.firstChild);
-    }
-}
-
-/* appendPageLinks --> creates all the page links based on a list of students. It will determine
-how many pages we need based on the list's length, create a list of links for each page and, and 
-append that list to the page */
-const appendPageLinks = (pageNumber, studentList) => {
-    let paginationUL = document.querySelector('.pagination-ul');
-    removeOldLinks();
-    // create and append li and a elements    
-    for (let i = 0; i < numberOfPages; i++) {
-
-        //adding li elements
-        let li = document.createElement('li');
-        li.className = 'pagination-li';
-        paginationUL.appendChild(li);
-
-        //adding a to the li's
-        let paginationLiNode = document.querySelectorAll('.pagination li');
-        let paginationLiArray = Array.from(paginationLiNode);
-        let a = document.createElement('a');
-        paginationLiArray[i].appendChild(a);
-        a.textContent = i + 1;
-    }
-}
-
-/* searchList --> takes a value from the input field, and compares it to each student in the list
-If that value is found inside the name or email of a student, that student is added to a new 
-"matched" list. If the "matched" list is empty, then display a message that no matching students 
-were found. Otherwise, call the appendPageLinks function to display the first page of matched 
-results. */
-const searchList = () => {
-    let searchResults =[];
-    const studentSearchInput01 = pageHeader.getElementsByTagName('input');
-    let userSearch = studentSearchInput01.textContent;
-    searchResults.push(userSearch);
-    console.log(searchResults);
-
-    const studentSearchInput02 = pageHeader.querySelector('input');
-    // let userSearch = studentSearchInput.textContent;
-    console.log(studentSearchInput02);
-
-
-
-    // Obtain the value of the search input
-    // Remove the previous page link section
-    // Loop over the student list, and for each student...
-    // ...obtain the student's name...
-    // ...and the student's email...
-    // ...if the search value is found inside either email or name...
-    // ...add this student to list of "matched" student
-    // If there is no "matched" students...
-    // Display a "no students found" message
-    // If over 10 students were found...
-    // ...call appendPageLinks with the matched students
-    // Call showPage to show the first 10 students of matched list
-}
-
-/* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 11) 
-then no pagination is applied */
-const kickstartPagination = (pagesNeeded) => {
-    if (pagesNeeded > 1) {
-        //crate <div class='pagination'>
-        hideList(studentListArray);
-
-        let newPaginationDiv = document.createElement('div');
-        newPaginationDiv.className = 'pagination';
-
-        // create pagination <ul class='pagination-ul'>
-        let newPaginationUL = document.createElement('ul');
-        newPaginationUL.className = 'pagination-ul';
-
-        // append both elements
-        studentListContainer.appendChild(newPaginationDiv);
-        newPaginationDiv.appendChild(newPaginationUL);
-
-        // build page 1
-        showPage(1, studentListArray);
-    } else {
-        return;
-    }
-}
-kickstartPagination(numberOfPages);
-
-/* EVENT HANDLERS */
-
-const paginationLinkItems = document.getElementsByTagName('a');
-
-// pagination event handler
-for (let i = 0; i < paginationLinkItems.length; i++) {
-    paginationLinkItems[i].addEventListener('click', (event) => {
-        let newPageNumber = parseInt(event.target.textContent, 10);
-        // rebuild page 
-        hideList(studentListArray);
-        determineStudentListSection(newPageNumber, studentListArray);
-        let activeLink = document.getElementsByTagName('a');
-        for (let i = 0; i < activeLink.length; i++) {
-            activeLink[i].className = '';
-        }
-        activeLink[newPageNumber - 1].className = 'active';
-    });
-}
-
-// inserting search elements
 document.addEventListener('DOMContentLoaded', () => {
+
+    const pageHeader = document.querySelector('.page-header');
+    const studentListContainer = document.querySelector('div.page');
+    const studentListNodeList = document.querySelectorAll('.student-list li'); // returns a NodeList!!
+    const studentListArray = Array.from(studentListNodeList);
+    let numberOfPages = Math.ceil(studentListArray.length / 10);
+
+    /* determineStudentListSection will slice the array into a smaller 10 item sub-array
+         with its contents dependent on the selected page number. */
+    const determineStudentListSection = (pageNumber, studentList) => {
+        let secondSliceNumber = pageNumber + (9 * pageNumber);
+        let firstSliceNumber = secondSliceNumber - 10;
+        let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
+        for (let i = 0; i < studentListSection.length; i++) {
+            studentListSection[i].style.display = 'list-item';
+        }
+        return studentListSection;
+    }
+
+    // hides the list items 
+    const hideList = (studentList) => {
+        for (let i = 0; i < studentList.length; i++) {
+            studentList[i].style.display = 'none';
+        }
+    }
+    
+    const showPage = (pageNumber, studentList) => {
+        let listSection = determineStudentListSection(pageNumber, studentList);
+        for (let i = 0; i < listSection.length; i++) {
+            listSection[i].style.display = 'list-item';
+        }
+        appendPageLinks(pageNumber, studentList);
+        let activeLink = document.getElementsByTagName('a');
+        activeLink[pageNumber - 1].className = 'active';
+    }
+
+    const removeOldLinks = () => {
+        let paginationUL = document.querySelector('.pagination-ul');
+        while (paginationUL.firstChild) {
+            paginationUL.removeChild(paginationUL.firstChild);
+        }
+    }
+    
+    const appendPageLinks = (pageNumber, studentList) => {
+        let paginationUL = document.querySelector('.pagination-ul');
+        removeOldLinks();
+        for (let i = 0; i < numberOfPages; i++) {
+            let li = document.createElement('li');
+            li.className = 'pagination-li';
+            paginationUL.appendChild(li);
+            let paginationLiNode = document.querySelectorAll('.pagination li');
+            let paginationLiArray = Array.from(paginationLiNode);
+            let a = document.createElement('a');
+            paginationLiArray[i].appendChild(a);
+            a.textContent = i + 1;
+        }
+    }
+
+    const searchList = () => {
+        let searchResults = [];
+        const studentSearchInput01 = pageHeader.getElementsByTagName('input');
+        let userSearch = studentSearchInput01.textContent;
+        searchResults.push(userSearch);
+        console.log(searchResults);
+
+        // Obtain the value of the search input
+        // Remove the previous page link section
+        // Loop over the student list, and for each student...
+        // ...obtain the student's name...
+        // ...and the student's email...
+        // ...if the search value is found inside either email or name...
+        // ...add this student to list of "matched" student
+        // If there is no "matched" students...
+        // Display a "no students found" message
+        // If over 10 students were found...
+        // ...call appendPageLinks with the matched students
+        // Call showPage to show the first 10 students of matched list
+    }
+
+    /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 11) 
+    then no pagination is applied */
+    const kickstartPagination = (pagesNeeded) => {
+        if (pagesNeeded > 1) {
+            hideList(studentListArray);
+            let newPaginationDiv = document.createElement('div');
+            newPaginationDiv.className = 'pagination';
+            let newPaginationUL = document.createElement('ul');
+            newPaginationUL.className = 'pagination-ul';
+            studentListContainer.appendChild(newPaginationDiv);
+            newPaginationDiv.appendChild(newPaginationUL);
+            showPage(1, studentListArray);
+        } else {
+            return;
+        }
+    }
+    kickstartPagination(numberOfPages);
+
+    /* EVENT HANDLERS */
+    const paginationLinkItems = document.getElementsByTagName('a');
+    
+    /* PAGINATION */ 
+    for (let i = 0; i < paginationLinkItems.length; i++) {
+        paginationLinkItems[i].addEventListener('click', (event) => {
+            let newPageNumber = parseInt(event.target.textContent, 10);
+            hideList(studentListArray);
+            determineStudentListSection(newPageNumber, studentListArray);
+            let activeLink = document.getElementsByTagName('a');
+            for (let i = 0; i < activeLink.length; i++) {
+                activeLink[i].className = '';
+            }
+            activeLink[newPageNumber - 1].className = 'active';
+        });
+    }
     const studentSearchDiv = document.createElement('Div');
     studentSearchDiv.className = 'student-search';
     pageHeader.appendChild(studentSearchDiv);
@@ -182,10 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentSearchButton = document.createElement('button');
     studentSearchButton.textContent = 'Search';
     studentSearchDiv.appendChild(studentSearchButton);
-});
 
-// studentSearchButton event handler
-const searchButton = document.getElementsByTagName('button')[0];
-searchButton.addEventListener('click', () => {
-    searchButton.textContent = 'Poof';
+
+    /* SEARCH BUTTON */
+    const searchButton = document.getElementsByTagName('button')[0];
+    searchButton.addEventListener('click', () => {
+        searchButton.textContent = 'Poof';
+    });
 });
