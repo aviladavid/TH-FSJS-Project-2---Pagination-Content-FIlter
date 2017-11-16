@@ -25,8 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const pageHeader = document.querySelector('.page-header');
     const studentListContainer = document.querySelector('div.page');
-    const studentListNodeList = document.querySelectorAll('.student-list li'); // returns a NodeList!!
+    const studentListNodeList = document.querySelectorAll('.student-list li');
     const studentListArray = Array.from(studentListNodeList);
+    const form = document.getElementById('searchForm');
+    const input = form.querySelector('input');
     let numberOfPages = Math.ceil(studentListArray.length / 10);
 
     /* determineStudentListSection will slice the array into a smaller 10 item sub-array
@@ -135,23 +137,32 @@ document.addEventListener('DOMContentLoaded', () => {
             activeLink[newPageNumber - 1].className = 'active';
         });
     }
-    const studentSearchDiv = document.createElement('Div');
-    studentSearchDiv.className = 'student-search';
-    pageHeader.appendChild(studentSearchDiv);
+    const studentSearchForm = document.createElement('form');
+    studentSearchForm.id = 'searchForm';
+    pageHeader.appendChild(studentSearchForm);
 
     const studentSearchInput = document.createElement('input');
-    studentSearchInput.placeholder = 'Search for students...';
     studentSearchInput.type = 'text';
-    studentSearchDiv.appendChild(studentSearchInput);
+    studentSearchInput.name = 'name';
+    studentSearchInput.placeholder = 'Search for students...';
+    studentSearchForm.appendChild(studentSearchInput);
 
     const studentSearchButton = document.createElement('button');
     studentSearchButton.textContent = 'Search';
-    studentSearchDiv.appendChild(studentSearchButton);
+    studentSearchButton.type = 'submit';
+    studentSearchButton.name = 'submit';
+    studentSearchButton.value = 'submit';
+    studentSearchForm.appendChild(studentSearchButton);
 
 
     /* SEARCH BUTTON */
-    const searchButton = document.getElementsByTagName('button')[0];
-    searchButton.addEventListener('click', () => {
-        searchButton.textContent = 'Poof';
+    // const searchButton = document.getElementsByTagName('button')[0];
+    // searchButton.addEventListener('click', () => {
+    //     searchButton.textContent = 'Poof';
+    // });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        searchList();
     });
 });

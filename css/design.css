@@ -28,6 +28,10 @@ body {
     float: right;
 }
 
+form {
+    float: right;
+}
+
 .page-header .student-search input {
     border-radius: 5px;
     border: 1px solid #eaeaea;
@@ -35,7 +39,23 @@ body {
     font-size: 14px;
 }
 
+.page-header form input {
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+    padding: 8px 15px;
+    font-size: 14px;
+}
+
 .page-header .student-search button {
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+    padding: 8px 15px;
+    font-size: 14px;
+    background-color: #4ba6c3;
+    color: #fff
+}
+
+.page-header form button {
     border-radius: 5px;
     border: 1px solid #eaeaea;
     padding: 8px 15px;
