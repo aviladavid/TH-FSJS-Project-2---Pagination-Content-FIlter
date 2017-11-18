@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let paginationUL = document.querySelector('.pagination-ul');
         removeOldLinks();
         let pages = determineNumberOfPages(studentList);
+
         for (let i = 0; i < pages; i++) {
             let li = newPageElement('li', 'className', 'pagination-li');
             paginationUL.appendChild(li);
@@ -76,13 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let a = newPageElement('a', 'textContent', i + 1);
             paginationLiArray[i].appendChild(a);
         }
+
         const paginationLinkItems = document.getElementsByTagName('a');
         for (let i = 0; i < paginationLinkItems.length; i++) {
             paginationLinkItems[i].addEventListener('click', (event) => {
                 let newPageNumber = parseInt(event.target.textContent, 10);
                 hideList(studentListArray);
-                // determineStudentListSection(newPageNumber, studentListArray); 
-                determineStudentListSection(newPageNumber, studentList); 
+                determineStudentListSection(newPageNumber, studentList);
                 let activeLink = document.getElementsByTagName('a');
                 for (let i = 0; i < activeLink.length; i++) {
                     activeLink[i].className = '';
@@ -90,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeLink[newPageNumber - 1].className = 'active';
             });
         }
+
     }
 
     const newPageElement = (elementName, property1, propertyValue1, property2, propertyValue2, property3, propertyValue3) => {
@@ -110,17 +112,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchedStudents.push(studentListArray[i]);
             }
         }
-        // let pagesForThisSearch = determineNumberOfPages(matchedStudents);
         showPage(1, matchedStudents);
-        let li = newPageElement('li', 'className', '');
-        let paginationUL = document.querySelector('.pagination-ul');
+
+        const paginationUL = document.querySelector('.pagination-ul');
+        let li = newPageElement('li', 'className', 'back-button');
         paginationUL.appendChild(li);
-        let a = newPageElement('a', 'textContent', 'Back to full list!', 'id', 'backButton');
+        let a = newPageElement('a', 'textContent', 'Back to list!', 'id', 'backButton');
         li.appendChild(a);
+
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
             kickstartPagination(initialNumberOfPages);
         });
+        console.log(paginationUL);
+
+        const paginationLi = document.querySelectorAll('.pagination-ul li.pagination-li');
+        const paginationLiArray = Array.from(paginationLi);
+        if (paginationLiArray.length < 2) {
+            paginationLiArray[0].style.display = 'none';
+        }
+
+
     }
 
     /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 
