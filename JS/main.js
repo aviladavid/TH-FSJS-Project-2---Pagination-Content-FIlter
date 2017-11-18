@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentListContainer = document.querySelector('div.page');
     const studentListNodeList = document.querySelectorAll('.student-list li');
     const studentListArray = Array.from(studentListNodeList);
-    // const form = document.getElementById('searchForm');
-    // const input = form.querySelector('input'); // @@@@
     let numberOfPages = Math.ceil(studentListArray.length / 10);
 
     /* determineStudentListSection will slice the array into a smaller 10 item sub-array
@@ -37,13 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return studentListSection;
     }
 
+    const determineNumberOfPages = (studentList) => {
+        let numberOfPages = Math.ceil(studentList.length / 10);
+        return numberOfPages;
+    }
+
     // hides the list items 
     const hideList = (studentList) => {
         for (let i = 0; i < studentList.length; i++) {
             studentList[i].style.display = 'none';
         }
     }
-    
+
     const showPage = (pageNumber, studentList) => {
         let listSection = determineStudentListSection(pageNumber, studentList);
         for (let i = 0; i < listSection.length; i++) {
@@ -60,10 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationUL.removeChild(paginationUL.firstChild);
         }
     }
-    
+
     const appendPageLinks = (pageNumber, studentList) => {
         let paginationUL = document.querySelector('.pagination-ul');
         removeOldLinks();
+
         for (let i = 0; i < numberOfPages; i++) {
             let li = document.createElement('li');
             li.className = 'pagination-li';
@@ -86,19 +90,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (student.includes(userSearch)) {
                 matchedStudents.push(studentListArray[i]);
             }
-            showPage(1, matchedStudents);
+
             let li = document.createElement('li');
             li.textContent = 'Return to full list';
             li.className = 'return-button';
             let paginationUL = document.querySelector('.pagination-ul');
             paginationUL.appendChild(li);
             let a = document.createElement('a');
-            // li.appendChild.
+            li.appendChild(a);
         }
+        let pagesForThisSearch = determineNumberOfPages(matchedStudents);
+        showPage(1, matchedStudents);
     }
 
-    /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 11) 
-    then no pagination is applied */
+    /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 
+    11) then no pagination is applied */
     const kickstartPagination = (pagesNeeded) => {
         if (pagesNeeded > 1) {
             hideList(studentListArray);
@@ -117,8 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* EVENT HANDLERS */
     const paginationLinkItems = document.getElementsByTagName('a');
-    
-    /* PAGINATION */ 
+
+    /* PAGINATION */
     for (let i = 0; i < paginationLinkItems.length; i++) {
         paginationLinkItems[i].addEventListener('click', (event) => {
             let newPageNumber = parseInt(event.target.textContent, 10);
