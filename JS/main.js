@@ -81,7 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationLinkItems[i].addEventListener('click', (event) => {
                 let newPageNumber = parseInt(event.target.textContent, 10);
                 hideList(studentListArray);
-                determineStudentListSection(newPageNumber, studentListArray);
+                // determineStudentListSection(newPageNumber, studentListArray); 
+                determineStudentListSection(newPageNumber, studentList); 
                 let activeLink = document.getElementsByTagName('a');
                 for (let i = 0; i < activeLink.length; i++) {
                     activeLink[i].className = '';
@@ -109,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchedStudents.push(studentListArray[i]);
             }
         }
-        let pagesForThisSearch = determineNumberOfPages(matchedStudents);
-        showPage(pagesForThisSearch, matchedStudents);
+        // let pagesForThisSearch = determineNumberOfPages(matchedStudents);
+        showPage(1, matchedStudents);
         let li = newPageElement('li', 'className', '');
         let paginationUL = document.querySelector('.pagination-ul');
         paginationUL.appendChild(li);
