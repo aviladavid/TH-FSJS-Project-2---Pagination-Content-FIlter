@@ -1,16 +1,22 @@
 /*
     TreeHouse Techdegree Full Stack JavaScript
     Project 2: Pagination & Content Filter
+
                         ***** AIMING FOR EXCEEDS EXPECTATIONS *****
+
 WHAT IT DOES:
+
     This JavaScript code is intended to handle pagination dynamically given an HTML list (in this 
     case a list of student profiles) of any size. The objective is that for any list exceeding 10 
     student profiles a pagination system kicks in to only show 10 profiles per page and provide 
     the user with pagination buttons and a search field feature.
+
 HOW IT WORKS:
+
     The code will transform the list into an array, hide all the profiles (list items), slice the 
     array into a smaller array (of maximum 10 items) that will contain only the profiles 
     corresponding to the given page number and display them.
+
     So for instance, page 1 will contain items in index positions 0 - 9 from the unsliced array,
     page 2 will contain items 10 - 19, so on and so forth. 
 */
@@ -21,9 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentListContainer = document.querySelector('div.page');
     const studentListNodeList = document.querySelectorAll('.student-list li');
     const studentListArray = Array.from(studentListNodeList);
-    // const form = document.getElementById('searchForm');
-    // const input = form.querySelector('input'); // @@@@
     let numberOfPages = Math.ceil(studentListArray.length / 10);
+    console.log(studentListArray);
 
     /* determineStudentListSection will slice the array into a smaller 10 item sub-array
          with its contents dependent on the selected page number. */
@@ -31,9 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let secondSliceNumber = pageNumber + (9 * pageNumber);
         let firstSliceNumber = secondSliceNumber - 10;
         let studentListSection = studentList.slice(firstSliceNumber, secondSliceNumber);
-        for (let i = 0; i < studentListSection.length; i++) {
-            studentListSection[i].style.display = 'list-item';
-        }
         return studentListSection;
     }
 
@@ -43,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             studentList[i].style.display = 'none';
         }
     }
-    
+
     const showPage = (pageNumber, studentList) => {
         let listSection = determineStudentListSection(pageNumber, studentList);
         for (let i = 0; i < listSection.length; i++) {
@@ -60,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationUL.removeChild(paginationUL.firstChild);
         }
     }
-    
+
     const appendPageLinks = (pageNumber, studentList) => {
         let paginationUL = document.querySelector('.pagination-ul');
         removeOldLinks();
@@ -97,8 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 11) 
-    then no pagination is applied */
+    /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 
+    11) then no pagination is applied */
     const kickstartPagination = (pagesNeeded) => {
         if (pagesNeeded > 1) {
             hideList(studentListArray);
@@ -117,13 +119,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* EVENT HANDLERS */
     const paginationLinkItems = document.getElementsByTagName('a');
-    
-    /* PAGINATION */ 
+
+    /* PAGINATION */
     for (let i = 0; i < paginationLinkItems.length; i++) {
         paginationLinkItems[i].addEventListener('click', (event) => {
             let newPageNumber = parseInt(event.target.textContent, 10);
             hideList(studentListArray);
-            determineStudentListSection(newPageNumber, studentListArray);
+            showPage(newPageNumber, studentListArray);
             let activeLink = document.getElementsByTagName('a');
             for (let i = 0; i < activeLink.length; i++) {
                 activeLink[i].className = '';
@@ -131,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
             activeLink[newPageNumber - 1].className = 'active';
         });
     }
-
     const studentSearchForm = document.createElement('form');
     studentSearchForm.id = 'searchForm';
     pageHeader.appendChild(studentSearchForm);
