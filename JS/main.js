@@ -112,7 +112,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 matchedStudents.push(studentListArray[i]);
             }
         }
-        showPage(1, matchedStudents);
+
+        if (matchedStudents.length === 0) {
+            let noMatch = newPageElement('li', 'textContent', 'NO MATCHES FOUND, TRY AGAIN!', 'id', 'no-match');
+            let newList = document.querySelector('.student-list');
+            newList.appendChild(noMatch);
+            removeOldLinks();
+        } else {
+            showPage(1, matchedStudents);
+        }
 
         const paginationUL = document.querySelector('.pagination-ul');
         let li = newPageElement('li', 'className', 'back-button');
@@ -123,6 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
             kickstartPagination(initialNumberOfPages);
+            // for loop on studentListArray, if noMatch = true then remove child
         });
         console.log(paginationUL);
 
@@ -131,8 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (paginationLiArray.length < 2) {
             paginationLiArray[0].style.display = 'none';
         }
-
-
     }
 
     /* kickstartPagination gets the process started. If only 1 page is needed (i.e. array items < 
