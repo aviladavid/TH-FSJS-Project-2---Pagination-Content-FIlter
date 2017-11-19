@@ -131,6 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
             kickstartPagination(initialNumberOfPages);
+            let noMatch = document.getElementById('no-match');
+            noMatch.parentNode.removeChild(noMatch);
             // for loop on studentListArray, if noMatch = true then remove child
         });
         console.log(paginationUL);
