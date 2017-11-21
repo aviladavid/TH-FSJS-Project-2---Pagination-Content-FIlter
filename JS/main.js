@@ -1,19 +1,20 @@
 /*
     TreeHouse Techdegree Full Stack JavaScript
     Project 2: Pagination & Content Filter
+
                         ***** AIMING FOR EXCEEDS EXPECTATIONS *****
+
 WHAT IT DOES:
     This JavaScript code is intended to handle pagination dynamically given an HTML list of any 
-    size. The objective is that for any list exceeding 10 student profiles a pagination system 
-    kicks in to only show 10 profiles per page. It should always provide the user with the search 
-    feature.
+    size. The objective is that for any list exceeding 10 items, a pagination system kicks in to 
+    only show 10 items per page. It should always provide the user with the search feature that 
+    will display only matching items. If no elements match the search, an error message is 
+    displayed. Pagination also kicks in if the returned results from a search exceed 10 items. 
 
 HOW IT WORKS:
-    The code will transform the list into an array, hide all the profiles (list items), slice the 
-    array into a smaller array (of maximum 10 items) that will contain only the profiles 
-    corresponding to the given page number and display them.
-    So for instance, page 1 will contain items in index positions 0 - 9 from the unsliced array,
-    page 2 will contain items 10 - 19, so on and so forth. 
+    The code will transform the HTML list into an array, hide all the profiles (list items), slice 
+    the array into a smaller sub-array (of maximum 10 items) that will contain only the profiles 
+    corresponding to the given page number and display them. For instance, page 1 will contain items in index positions 0 - 9 from the unsliced array, page 2 will contain items 10 - 19, so on and so forth. Regarding pagination, a navigation bar at the bottom of the list will provide 1 numbered button for every page that is needed. When running a search, a 
 */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let initialNumberOfPages = Math.ceil(studentListArray.length / 10);
 
     /* determineStudentListSection will slice the array into a smaller 10 item sub-array
-         with its contents dependent on the selected page number. */
+    with its contents dependent on the selected page number. */
     const determineStudentListSection = (pageNumber, studentList) => {
         let secondSliceNumber = pageNumber + (9 * pageNumber);
         let firstSliceNumber = secondSliceNumber - 10;
@@ -106,9 +107,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let matchedStudents = [];
         let userSearch = text.toLowerCase();
         hideList(studentListArray);
+        const namesArray = document.querySelectorAll('h3');
+        const emailsArray = document.querySelectorAll('.email');
         for (i = 0; i < studentListArray.length; i++) {
-            let student = studentListArray[i].innerText.trim().toLowerCase();
-            if (student.includes(userSearch)) {
+            let studentNameMatch = namesArray[i].innerText.toLowerCase();
+            let studentEmailMatch = emailsArray[i].innerText.toLowerCase();
+            if (studentNameMatch.includes(userSearch) || studentEmailMatch.includes(userSearch)) {
                 matchedStudents.push(studentListArray[i]);
             }
         }
@@ -122,20 +126,20 @@ document.addEventListener('DOMContentLoaded', () => {
             showPage(1, matchedStudents);
         }
 
+        /* BACK BUTTON CREATION */
         const paginationUL = document.querySelector('.pagination-ul');
         let li = newPageElement('li', 'className', 'back-button');
         paginationUL.appendChild(li);
         let a = newPageElement('a', 'textContent', 'Back to list!', 'id', 'backButton');
         li.appendChild(a);
 
+        /* BACK BUTTON HANDLER */
         const backButton = document.getElementById('backButton');
         backButton.addEventListener('click', () => {
             kickstartPagination(initialNumberOfPages);
             let noMatch = document.getElementById('no-match');
             noMatch.parentNode.removeChild(noMatch);
-            // for loop on studentListArray, if noMatch = true then remove child
         });
-        console.log(paginationUL);
 
         const paginationLi = document.querySelectorAll('.pagination-ul li.pagination-li');
         const paginationLiArray = Array.from(paginationLi);
@@ -160,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     kickstartPagination(initialNumberOfPages);
 
-    /* SEARCH FORM */
+    /* SEARCH FORM CREATION */
     const studentSearchForm = newPageElement('form', 'id', 'searchForm');
     pageHeader.appendChild(studentSearchForm);
     const studentSearchInput = newPageElement('input', 'type', 'text', 'name', 'name', 'placeholder', 'Search for students...');
@@ -168,10 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentSearchButton = newPageElement('button', 'type', 'submit', 'textContent', 'Search');
     studentSearchForm.appendChild(studentSearchButton);
 
-    /* FORM HANDLER*/
+    /* SEARCH FORM HANDLER*/
     const form = document.getElementById('searchForm');
     const input = form.querySelector('input');
-
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const text = input.value;
